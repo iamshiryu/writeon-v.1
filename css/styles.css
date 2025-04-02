@@ -1,0 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+}
+
+body {
+    display: flex; /* ใช้ flexbox */
+    flex-direction: column; /* แนวตั้ง */
+    justify-content: center; /* จัดแนวกลางในแนวตั้ง */
+    align-items: center; /* จัดแนวกลางในแนวนอน */
+    height: 100vh; /* ความสูงของ viewport */
+    margin: 0; /* กำจัด margin เริ่มต้น */
+    font-family: Arial, sans-serif; /* ฟอนต์ */
+    background-image: url("asset/bg.jpg");
+}
+
+h2 {
+    margin-bottom: 20px; /* ระยะห่างด้านล่าง */
+    color: black;
+}
+
+p {
+    margin: 10px 0; /* ระยะห่างบนและล่าง */
+}
+
+form {
+    display: flex;
+    flex-direction: column; /* จัดฟอร์มในแนวตั้ง */
+    width: 300px; /* ความกว้างของฟอร์ม */
+}
+
+label {
+    margin-bottom: 5px; /* ระยะห่างด้านล่าง */
+}
+
+input {
+    margin-bottom: 15px; /* ระยะห่างด้านล่าง */
+    padding: 10px; /* ช่องว่างภายใน */
+    border: 1px solid #ccc; /* กรอบ */
+    border-radius: 5px; /* มุมมน */
+}
+
+button {
+    padding: 10px; /* ช่องว่างภายใน */
+    background-color: #4CAF50; /* สีพื้นหลัง */
+    color: white; /* สีข้อความ */
+    border: none; /* ไม่มีกรอบ */
+    border-radius: 5px; /* มุมมน */
+    cursor: pointer; /* เปลี่ยนเคอร์เซอร์ */
+}
+
+button:hover {
+    background-color: #45a049; /* เปลี่ยนสีเมื่อวางเมาส์ */
+}
+
+.margin-top {
+    margin-top: 10px;
+}
+
+.heading {
+    margin-top: 0px;
+}
