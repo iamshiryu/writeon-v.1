@@ -19,23 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // ตรวจสอบว่าผู้ใช้งานมีอยู่ในระบบหรือไม่
     $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        // ผู้ใช้งานมีอยู่ในระบบ ดึงข้อมูลรหัสผ่านและ role เพื่อตรวจสอบ
         $stmt->bind_result($id, $hashed_password, $role);
         $stmt->fetch();
 
-        // ตรวจสอบรหัสผ่าน
         if (password_verify($password, $hashed_password)) {
-            // เข้าสู่ระบบสำเร็จ
             $_SESSION['user_id'] = $id;
 
-            // ตรวจสอบ role ว่าเป็น admin หรือไม่
             if ($role === 'admin') {
                 echo "<script>
                         alert('คุณเป็นแอดมิน กรุณาเข้าสู่ระบบแบบ admin');
@@ -120,7 +115,7 @@ $conn->close();
     background-color: var(--black);
     border-color: gray; 
     box-shadow: 2px 5px 14px #888888;
-    backdrop-filter: blur(5px); /* ปรับค่าตามที่ต้องการ */
+    backdrop-filter: blur(5px); ปรับค่าตามที่ต้องการ
         }
     </style>
 </head>

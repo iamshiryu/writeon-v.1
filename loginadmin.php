@@ -9,39 +9,30 @@ ini_set('display_errors', 1);
 // เชื่อมต่อฐานข้อมูล
 $conn = new mysqli('localhost', 'root', '', 'user');
 
-// ตรวจสอบการเชื่อมต่อ
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ตรวจสอบเมื่อมีการ submit ฟอร์ม
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // ตรวจสอบว่าผู้ใช้งานมีอยู่ในระบบหรือไม่
     $stmt = $conn->prepare("SELECT id, password, role FROM users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        // ผู้ใช้งานมีอยู่ในระบบ ดึงข้อมูลรหัสผ่านและ role เพื่อตรวจสอบ
         $stmt->bind_result($id, $hashed_password, $role);
         $stmt->fetch();
 
-        // ตรวจสอบรหัสผ่าน
         if (password_verify($password, $hashed_password)) {
-            // เข้าสู่ระบบสำเร็จ
             $_SESSION['user_id'] = $id;
 
-            // ตรวจสอบ role ว่าเป็น admin หรือไม่
             if ($role === 'admin') {
-                // ถ้าเป็น admin เปลี่ยนเส้นทางไปยังหน้า admin
                 header("Location: shopping/index.php");
                 exit;
             } else {
-                // ถ้าไม่ใช่ admin เปลี่ยนเส้นทางกลับไปหน้า index.html พร้อมแจ้งเตือน
                 echo "<script>
                         alert('คุณไม่ใช่แอดมิน');
                         window.location.href = 'index.html';
@@ -153,7 +144,7 @@ $conn->close();
     <section class="container">
         <div class="display_product">
             <div class="edit_form">
-    <h1>Log In for Customer</h1>
+    <h1>Log In for Admin</h1>
     <form action="loginadmin.php" method="POST">
         <label for="username" class="margin-top">Username:</label>
         <input type="text" name="username" required><br>
