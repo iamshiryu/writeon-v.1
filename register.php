@@ -5,24 +5,19 @@ session_start();
 // เชื่อมต่อฐานข้อมูล
 $conn = new mysqli('localhost', 'root', '', 'user');
 
-// ตรวจสอบการเชื่อมต่อ
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ตรวจสอบเมื่อมีการ submit ฟอร์ม
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // กำหนด role เป็น 'buyer' โดยอัตโนมัติ
     $role = 'user';
 
-    // เข้ารหัสรหัสผ่านก่อนเก็บลงฐานข้อมูล
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // ตรวจสอบว่าผู้ใช้งานมี username หรือ email ซ้ำกันอยู่หรือไม่
     $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
     $stmt->bind_param("ss", $username, $email);
     $stmt->execute();
@@ -31,13 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->num_rows > 0) {
         echo "<script>alert('ชื่อผู้ใช้หรืออีเมลนี้ถูกใช้งานแล้ว');</script>";
     } else {
-        // บันทึกข้อมูลผู้ใช้ใหม่
         $stmt = $conn->prepare("INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $username, $email, $hashed_password, $role);
 
         if ($stmt->execute()) {
             echo "<script>alert('สมัครสมาชิกสำเร็จ!'); window.location.href='index.html';</script>";
-            exit; // ใช้ exit เพื่อหยุดการทำงานของสคริปต์
+            exit;
         } else {
             echo "<script>alert('เกิดข้อผิดพลาด: " . $conn->error . "');</script>";
         }
