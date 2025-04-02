@@ -15,6 +15,20 @@ $user_id = $_SESSION['user_id'];
 $is_quantity_available = true; // สถานะเริ่มต้นที่ให้ปริมาณเพียงพอ
 $error_message = ''; // ตัวแปรสำหรับเก็บข้อความแจ้งเตือน
 
+// ดึงข้อมูลที่อยู่ของผู้ใช้จากฐานข้อมูล
+$user_address_query = mysqli_query($conn2, "SELECT address FROM users WHERE id = '$user_id'");
+$user_address_data = mysqli_fetch_assoc($user_address_query);
+$user_address = $user_address_data['address'];
+
+// ถ้าผู้ใช้ยังไม่กรอกที่อยู่
+if (empty($user_address)) {
+    echo "<script>
+            alert('กรุณากรอกที่อยู่ก่อนทำการชำระเงิน');
+            window.location.href = 'profile.php'; // เปลี่ยนเส้นทางไปหน้า profile
+          </script>";
+    exit();
+}
+
 // ดึงสินค้าจากตะกร้าสำหรับ user_id ที่ตรงกัน
 $select_cart_products = mysqli_query($conn, "SELECT * FROM `cart` WHERE user_id = '$user_id'");
 $grand_total = 0;
@@ -53,7 +67,6 @@ if (isset($_GET['remove'])) {
     header('location: cart.php'); // เปลี่ยนเส้นทางกลับไปที่หน้า cart
     exit();
 }
-
 
 // เช็คสินค้าในตะกร้าว่ายังมีอยู่ในฐานข้อมูลหรือไม่
 while ($fetch_cart_products = mysqli_fetch_assoc($select_cart_products)) {
@@ -138,7 +151,7 @@ if ($is_quantity_available) {
                             <td><?php echo $num?></td>
                             <td><?php echo $fetch_cart_products['name']?></td>
                             <td>
-                                <img src="images/<?php echo $fetch_cart_products['image']?>" alt="">
+                                <img src="images/<?php echo $fetch_cart_products['image']?>" alt=""/>
                             </td>
                             <td><?php echo $fetch_cart_products['price']?> Baht</td>
                             <td>

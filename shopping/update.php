@@ -6,27 +6,32 @@ if(isset($_POST['update_product'])){
     $update_product_price = $_POST['update_product_price'];
     $update_product_quantity = $_POST['update_product_quantity'];
 
-    // ตรวจสอบว่าผู้ใช้ได้อัปโหลดไฟล์รูปใหม่หรือไม่
-    $update_product_image = $_FILES['update_product_image']['name'];
-    $update_product_image_tmp_name = $_FILES['update_product_image']['tmp_name'];
-    $update_product_image_folder = 'images/'.$update_product_image;
-
-    if(!empty($update_product_image)){
-        // ถ้ามีการอัปโหลดไฟล์รูปใหม่
-        $update_products = mysqli_query($conn, "UPDATE `products` SET name='$update_product_name', price='$update_product_price', quantity='$update_product_quantity', image='$update_product_image' WHERE id=$update_product_id");
-        if($update_products){
-            move_uploaded_file($update_product_image_tmp_name, $update_product_image_folder);
-            header('location:view_products.php');
-        } else {
-            $display_message = "There is some error in updating the product";
-        }
+    // ตรวจสอบว่า quantity และ price ไม่ให้เป็นค่าติดลบ
+    if($update_product_price < 0 || $update_product_quantity < 0) {
+        $display_message = "Price and Quantity cannot be negative.";
     } else {
-        // ถ้าไม่มีการอัปโหลดไฟล์รูปใหม่
-        $update_products = mysqli_query($conn, "UPDATE `products` SET name='$update_product_name', price='$update_product_price', quantity='$update_product_quantity' WHERE id=$update_product_id");
-        if($update_products){
-            header('location:view_products.php');
+        // ตรวจสอบว่าผู้ใช้ได้อัปโหลดไฟล์รูปใหม่หรือไม่
+        $update_product_image = $_FILES['update_product_image']['name'];
+        $update_product_image_tmp_name = $_FILES['update_product_image']['tmp_name'];
+        $update_product_image_folder = 'images/'.$update_product_image;
+
+        if(!empty($update_product_image)){
+            // ถ้ามีการอัปโหลดไฟล์รูปใหม่
+            $update_products = mysqli_query($conn, "UPDATE `products` SET name='$update_product_name', price='$update_product_price', quantity='$update_product_quantity', image='$update_product_image' WHERE id=$update_product_id");
+            if($update_products){
+                move_uploaded_file($update_product_image_tmp_name, $update_product_image_folder);
+                header('location:view_products.php');
+            } else {
+                $display_message = "There is some error in updating the product";
+            }
         } else {
-            $display_message = "There is some error in updating the product";
+            // ถ้าไม่มีการอัปโหลดไฟล์รูปใหม่
+            $update_products = mysqli_query($conn, "UPDATE `products` SET name='$update_product_name', price='$update_product_price', quantity='$update_product_quantity' WHERE id=$update_product_id");
+            if($update_products){
+                header('location:view_products.php');
+            } else {
+                $display_message = "There is some error in updating the product";
+            }
         }
     }
 }

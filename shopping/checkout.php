@@ -162,14 +162,39 @@ if (isset($_POST['payment_method'])) {
                     <h2>Total: <span><?php echo number_format($total_amount); ?> BAHT</span></h2>
                 </div>
                 <form action="process_payment.php" method="POST">
-                    <label for="payment_method" class="center-text margin-top">Choose payment method: <select id="payment_method" name="payment_method" class="margin-left" required>
-                        <option value="cash_on_delivery">Cash on delivery <input type="submit" value="Pay" class="btn margin-left"></option>
-                    </select></label><br>
+                    <label for="payment_method" class="center-text margin-top">Choose payment method:
+                        <select id="payment_method" name="payment_method" class="margin-left" required>
+                            <option value="cash_on_delivery">Cash on delivery</option>
+                            <option value="qr_code_payment">Scan QR Code</option>
+                        </select>
+                    </label><br>
+                    
+                    <!-- QR Code Section (Initially Hidden) -->
+                    <div id="qr_code_section" style="display: none;">
+                        <h3>Scan QR Code for Payment</h3>
+                        <!-- Include your QR code image or generation logic here -->
+                        <img src="/qrcode.png" alt="QR Code" style="width: 200px; height: 200px;">
+                    </div>
+                    
+                    <input type="submit" value="Pay" class="btn margin-left">
                     <a href="cart.php" class="btn"><i class="fas fa-arrow-left"></i> Back </a>
                     <input type="hidden" name="total_amount" value="<?php echo $total_amount; ?>">
                 </form>
+                
+                <script>
+                    // Show QR Code section when the "Scan QR Code" option is selected
+                    document.getElementById('payment_method').addEventListener('change', function () {
+                        var qrCodeSection = document.getElementById('qr_code_section');
+                        if (this.value === 'qr_code_payment') {
+                            qrCodeSection.style.display = 'block';
+                        } else {
+                            qrCodeSection.style.display = 'none';
+                        }
+                    });
+                </script>
             </center>
         </section>
     </div>
 </body>
+
 </html>

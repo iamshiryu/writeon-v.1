@@ -6,19 +6,16 @@ session_start();
 $conn = mysqli_connect('localhost', 'root', '', 'user');
 $conn1 = mysqli_connect('localhost', 'root', '', 'db');
 
-// ตรวจสอบการเชื่อมต่อ
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// ตรวจสอบว่าได้ทำการล็อกอินหรือไม่
 if (!isset($_SESSION['user_id'])) {
     echo "คุณยังไม่ได้เข้าสู่ระบบ กรุณาล็อกอินก่อน!";
     header("Location: login.php"); // เปลี่ยนเส้นทางไปยังหน้า login หากยังไม่ได้ล็อกอิน
     exit();
 }
 
-// ดึงข้อมูลผู้ใช้จากฐานข้อมูล
 $user_id = $_SESSION['user_id'];
 $stmt = $conn->prepare("SELECT username, email, fname, lname, address, tel FROM users WHERE id = ?");
 $stmt->bind_param("i", $user_id);
@@ -27,20 +24,17 @@ $stmt->bind_result($username, $email, $fname, $lname, $address, $tel);
 $stmt->fetch();
 $stmt->close();
 
-// ตรวจสอบเมื่อมีการ submit ฟอร์ม
 if (isset($_POST['save_information'])) {
     $fname = $_POST['fname'];
     $lname = $_POST['lname'];
     $address = $_POST['address'];
     $tel = $_POST['tel'];
 
-    // อัปเดตข้อมูลในฐานข้อมูล
     $update_query = $conn->prepare("UPDATE users SET fname = ?, lname = ?, address = ?, tel = ? WHERE id = ?");
     $update_query->bind_param("ssssi", $fname, $lname, $address, $tel, $user_id);
     
     if ($update_query->execute()) {
         $display_message = "ข้อมูลถูกอัปเดตเรียบร้อยแล้ว";
-        // อัปเดตค่าที่ถูกส่งกลับในฟอร์ม
         $fname = $fname;
         $lname = $lname;
         $address = $address;
@@ -50,13 +44,11 @@ if (isset($_POST['save_information'])) {
     }
 }
 
-// ดึงข้อมูลประวัติการสั่งซื้อจากฐานข้อมูล
 $order_query = $conn1->prepare("SELECT id, payment_method, total_amount, created_at FROM orders WHERE user_id = ?");
 $order_query->bind_param("i", $user_id);
 $order_query->execute();
 $order_result = $order_query->get_result();
 
-// ปิดการเชื่อมต่อฐานข้อมูลหลังจากบันทึกข้อมูลแล้ว
 $conn->close();
 ?>
 

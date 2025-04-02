@@ -33,6 +33,12 @@
                         </thead>
                     <tbody>";
                 while($row = mysqli_fetch_assoc($display_product)){
+                    // ตรวจสอบว่า price หรือ quantity ติดลบหรือไม่
+                    if ($row['price'] < 0 || $row['quantity'] < 0) {
+                        $edit_disabled = true; // ห้ามแก้ไข
+                    } else {
+                        $edit_disabled = false; // สามารถแก้ไขได้
+                    }
             ?>
             <tr>
                 <td><?php echo $num ?></td>
@@ -42,7 +48,11 @@
                 <td><?php echo $row['quantity'] ?> ea</td>
                 <td>
                     <a href="delete.php?delete=<?php echo $row['id'] ?>" class="delete_product_btn" onclick="return confirm('Are you sure?');"><i class="fas fa-trash"></i></a>
-                    <a href="update.php?edit=<?php echo $row['id'] ?>" class="update_product_btn"><i class="fas fa-edit"></i></a>
+                    <?php if (!$edit_disabled) { ?>
+                        <a href="update.php?edit=<?php echo $row['id'] ?>" class="update_product_btn"><i class="fas fa-edit"></i></a>
+                    <?php } else { ?>
+                        <span class="disabled-btn"><i class="fas fa-edit"></i></span> <!-- แสดงปุ่มที่ไม่สามารถคลิกได้ -->
+                    <?php } ?>
                 </td>
             </tr>
             <?php

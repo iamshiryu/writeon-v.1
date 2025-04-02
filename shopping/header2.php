@@ -32,6 +32,12 @@
         flex: 1; /* ทำให้ navbar ขยายเต็มที่ */
     }
 
+.navbar-start {
+        display: flex;
+        justify-content: flex-start; 
+        flex: 1; /* ทำให้ navbar ขยายเต็มที่ */
+    }
+
 .navbar a {
     margin: 0 15px;
     text-decoration: none;
@@ -49,13 +55,10 @@
 
 <header class="header">
     <div class="header_body">
-        <!-- รูปโลโก้จะอยู่ทางซ้าย -->
-        <a href="index.php">
-            <img src="/logo.png" alt="Write On Logo" class="logo"/>
-        </a>
         
         <!-- เมนูจะอยู่ตรงกลาง -->
         <nav class="navbar">
+            <a href="index.php" class="navbar-start">Admin Dashboard</a>
             <a href="index.php">Add Products</a>
             <a href="view_products.php">View Products</a>
             <!-- <a href="checkrecord.php">Check Record</a> -->
